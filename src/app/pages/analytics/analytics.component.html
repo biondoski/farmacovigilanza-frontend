@@ -1,0 +1,113 @@
+<div class="analytics-container">
+  <h1>Analytics Avanzate</h1>
+
+  <div class="card filter-card">
+    <form [formGroup]="filterForm" (ngSubmit)="applyFilters()">
+      <input type="text" placeholder="Nome Farmaco (opzionale)" formControlName="farmaco">
+      <input type="date" formControlName="dataDa" title="Data Da">
+      <input type="date" formControlName="dataA" title="Data A">
+      <button type="submit" [disabled]="isLoading">
+        {{ isLoading ? 'Caricamento...' : 'Applica Filtri' }}
+      </button>
+    </form>
+  </div>
+
+  <div *ngIf="isLoading" class="loading">Analisi dei dati in corso...</div>
+
+  <div *ngIf="!isLoading" class="analytics-grid">
+    <div class="card">
+      <h2>Segnalazioni per Farmaco</h2>
+      <p class="subtitle">Clicca su una barra per vedere i dettagli</p>
+      <div class="chart-container">
+        <ngx-charts-bar-vertical
+          (select)="onChartClick($event)"
+          [results]="reportsByDrugData"
+          [xAxis]="true"
+          [yAxis]="true"
+          xAxisLabel="Farmaco"
+          yAxisLabel="Numero di Segnalazioni">
+        </ngx-charts-bar-vertical>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Segnalazioni per Gravità</h2>
+      <div class="chart-container">
+        <ngx-charts-pie-chart
+          [results]="reportsBySeverityData"
+          [labels]="true"
+          [doughnut]="true">
+        </ngx-charts-pie-chart>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading" class="analytics-grid">
+    <div class="card" *ngIf="filterForm.value.farmaco && hotLotsData.length > 0">
+      <h2>Lotti più Segnalati per: <strong>{{ filterForm.value.farmaco }}</strong></h2>
+      <div class="table-container">
+        <table>
+          <thead>
+          <tr>
+            <th>N° Lotto</th>
+            <th>Segnalazioni Totali</th>
+            <th>Segnalazioni Gravi</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let lot of hotLotsData">
+            <td>{{ lot._id }}</td>
+            <td class="text-center">{{ lot.segnalazioniTotali }}</td>
+            <td class="text-center danger-text">{{ lot.segnalazioniGravi }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading" class="analytics-grid">
+    <div class="card heatmap-card" *ngIf="symptomCorrelationData.length > 0">
+      <h2>Correlazione tra Sintomi</h2>
+      <p class="subtitle">Quali sintomi appaiono più spesso insieme</p>
+      <div class="chart-container">
+        <ngx-charts-heat-map
+          [results]="symptomCorrelationData"
+          [xAxis]="true"
+          [yAxis]="true"
+          [legend]="true"
+          [showXAxisLabel]="true"
+          [showYAxisLabel]="true"
+          xAxisLabel="Sintomi"
+          yAxisLabel="Sintomi">
+        </ngx-charts-heat-map>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading" class="analytics-grid">
+    <div class="card">
+      <h2>Segnalazioni per Fascia d'Età</h2>
+      <div class="chart-container">
+        <ngx-charts-bar-vertical
+          [results]="ageAnalysisData"
+          [xAxis]="true"
+          [yAxis]="true"
+          xAxisLabel="Fascia d'Età"
+          yAxisLabel="Numero di Segnalazioni">
+        </ngx-charts-bar-vertical>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Distribuzione per Sesso</h2>
+      <div class="chart-container">
+        <ngx-charts-pie-chart
+          [results]="genderAnalysisData"
+          [labels]="true">
+        </ngx-charts-pie-chart>
+      </div>
+    </div>
+  </div>
+
+</div>

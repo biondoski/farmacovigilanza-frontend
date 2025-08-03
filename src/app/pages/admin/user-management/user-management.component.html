@@ -1,0 +1,42 @@
+<div class="list-container">
+  <div class="list-header">
+    <h1>Gestione Utenti</h1>
+    <button class="btn-primary" (click)="openAddModal()">Aggiungi Utente</button>
+  </div>
+  <p>Da questa pagina puoi visualizzare e rimuovere gli utenti della piattaforma.</p>
+
+  <div *ngIf="isLoading" class="loading">Caricamento...</div>
+
+  <div class="modal-backdrop" *ngIf="isModalOpen">
+    <div class="modal-content">
+      <app-user-form
+        [userToEdit]="selectedUser"
+        (formClosed)="handleFormClose($event)">
+      </app-user-form>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading" class="table-container">
+    <table>
+      <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Ruolo</th>
+        <th>Azioni</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{ user.name }}</td>
+        <td>{{ user.email }}</td>
+        <td><span class="role-badge role-{{ user.role.toLowerCase() }}">{{ user.role }}</span></td>
+        <td>
+          <button class="btn-secondary" (click)="openEditModal(user)">Modifica</button>&nbsp;&nbsp;
+          <button class="btn-danger" (click)="onDeleteUser(user._id)" [disabled]="user._id === currentUserId">Elimina</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,88 @@
+<div class="dashboard-container">
+  <div *ngIf="user?.role === 'Operatore'">
+  </div>
+
+  <div *ngIf="user?.role === 'Analista' || user?.role === 'Admin'">
+    <div class="header">
+      <h1>Dashboard Analitica</h1>
+      <p>Panoramica in tempo reale delle segnalazioni di farmacovigilanza.</p>
+    </div>
+
+    <div *ngIf="isLoading" class="loading">Caricamento dati...</div>
+    <div *ngIf="error" class="error">{{ error }}</div>
+
+    <div *ngIf="summaryData" class="dashboard-grid">
+      <div class="card kpi-card">
+        <fa-icon [icon]="faNotesMedical" size="2x"></fa-icon>
+        <div class="kpi-content">
+          <div class="kpi-value">{{ summaryData.totalReports }}</div>
+          <div class="kpi-label">Segnalazioni Totali</div>
+        </div>
+      </div>
+      <div class="card kpi-card">
+        <fa-icon [icon]="faCapsules" size="2x"></fa-icon>
+        <div class="kpi-content">
+          <div class="kpi-value">{{ summaryData.top5Drugs[0]?._id || 'N/D' }}</div>
+          <div class="kpi-label">Farmaco più Segnalato</div>
+        </div>
+      </div>
+      <div class="card kpi-card">
+        <fa-icon [icon]="faExclamationTriangle" size="2x"></fa-icon>
+        <div class="kpi-content">
+          <div class="kpi-value">{{ severityChartData[0]?.name || 'N/D' }}</div>
+          <div class="kpi-label">Gravità Prevalente</div>
+        </div>
+      </div>
+      <div class="card kpi-card kpi-card--danger">
+        <fa-icon [icon]="faBiohazard" size="2x"></fa-icon>
+        <div class="kpi-content">
+          <div class="kpi-value">{{ summaryData.totalGraveReports }}</div>
+          <div class="kpi-label">Segnalazioni Gravi</div>
+        </div>
+      </div>
+
+      <div class="card map-card">
+        <div class="map-wrapper">
+          <h3><fa-icon [icon]="faGlobeEurope"></fa-icon> Distribuzione Geografica</h3>
+          <div #mapContainer id="map"></div>
+        </div>
+        <br>
+        <div class="map-wrapper">
+          <h3><fa-icon [icon]="faBiohazard"></fa-icon> Heatmap delle Segnalazioni</h3>
+          <div #heatmapContainer id="heatmap"></div> </div>
+      </div>
+
+      <div class="card recent-reports-card">
+        <h3>Top 5 Farmaci Segnalati</h3>
+        <ul>
+          <li *ngFor="let report of summaryData.top5Drugs">
+            <span class="farmaco">{{ report._id }}</span>
+            <span class="gravita-badge gravita-grave">{{ report.count }}</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card chart-card">
+        <h3>Segnalazioni per Gravità</h3>
+        <ngx-charts-pie-chart
+          [results]="severityChartData"
+          [labels]="true"
+          [doughnut]="true"
+          [legend]="false"
+          [legendPosition]="legendPositionValue">
+        </ngx-charts-pie-chart>
+      </div>
+
+      <div class="card recent-reports-card">
+        <h3>Ultime Segnalazioni</h3>
+        <ul>
+          <li *ngFor="let report of summaryData.last5Reports">
+            <span class="farmaco">{{ report.farmaco.nomeCommerciale }}</span>
+            <span class="gravita-badge gravita-{{ report.reazione.gravita.toLowerCase() }}">{{ report.reazione.gravita }}</span>
+            <span class="data">{{ report.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

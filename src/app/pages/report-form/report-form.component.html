@@ -1,0 +1,83 @@
+<div class="form-container">
+  <h1>{{ isEditMode ? 'Modifica Segnalazione' : 'Crea Nuova Segnalazione' }}</h1>
+
+  <div *ngIf="isLoading" class="loading">Caricamento...</div>
+
+  <form [formGroup]="reportForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
+
+    <fieldset formGroupName="farmaco">
+      <legend>Dati Farmaco</legend>
+      <div class="form-group">
+        <label for="nomeCommerciale">Nome Commerciale</label>
+        <input id="nomeCommerciale" type="text" formControlName="nomeCommerciale">
+      </div>
+      <div class="form-group">
+        <label for="principioAttivo">Principio Attivo</label>
+        <input id="principioAttivo" type="text" formControlName="principioAttivo">
+      </div>
+      <div class="form-group">
+        <label for="lotto">Lotto (opzionale)</label>
+        <input id="lotto" type="text" formControlName="lotto">
+      </div>
+    </fieldset>
+
+    <fieldset formGroupName="paziente">
+      <legend>Dati Paziente</legend>
+      <div class="form-group">
+        <label for="eta">Età</label>
+        <input id="eta" type="number" formControlName="eta">
+      </div>
+      <div class="form-group">
+        <label for="sesso">Sesso</label>
+        <select id="sesso" formControlName="sesso">
+          <option value="" disabled>Seleziona...</option>
+          <option value="M">Maschio</option>
+          <option value="F">Femmina</option>
+          <option value="Altro">Altro</option>
+        </select>
+      </div>
+    </fieldset>
+
+    <fieldset formGroupName="reazione">
+      <legend>Dati Reazione</legend>
+      <div class="form-group">
+        <label for="descrizione">Descrizione della Reazione</label>
+        <textarea id="descrizione" rows="5" formControlName="descrizione"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="gravita">Gravità</label>
+        <select id="gravita" formControlName="gravita">
+          <option value="Sconosciuta">Sconosciuta</option>
+          <option value="Lieve">Lieve</option>
+          <option value="Moderata">Moderata</option>
+          <option value="Grave">Grave</option>
+        </select>
+      </div>
+    </fieldset>
+
+    <fieldset formGroupName="localita">
+      <legend>Località (opzionale)</legend>
+      <div class="form-group-inline">
+        <div class="form-group">
+          <label for="lat">Latitudine</label>
+          <input id="lat" type="number" formControlName="lat">
+        </div>
+        <div class="form-group">
+          <label for="lon">Longitudine</label>
+          <input id="lon" type="number" formControlName="lon">
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="reportForm.invalid || isLoading">
+        {{ isLoading ? 'Salvataggio...' : (isEditMode ? 'Salva Modifiche' : 'Crea Segnalazione') }}
+      </button>
+      <a routerLink="/reports" class="btn-secondary">Annulla</a>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+  </form>
+</div>

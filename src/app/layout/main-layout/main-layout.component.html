@@ -1,0 +1,23 @@
+<header class="main-header">
+  <h1>Piattaforma di Farmacovigilanza</h1>
+  <div class="user-info" *ngIf="user">
+    <span>Benvenuto, {{ user.name }} ({{ user.role }})</span>
+    <button (click)="logout()">Logout</button>
+  </div>
+</header>
+
+<div class="main-container">
+  <nav class="sidebar">
+    <ul>
+      <li><a routerLink="/dashboard" routerLinkActive="active">Dashboard</a></li>
+      <li><a routerLink="/reports" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Lista Segnalazioni</a></li>
+      <li><a routerLink="/reports/new" routerLinkActive="active">Nuova Segnalazione</a></li>
+      <li *ngIf="isAdmin"><a routerLink="/admin/users" routerLinkActive="active">Gestione Utenti</a></li>
+      <li *ngIf="canViewAnalytics"><a routerLink="/analytics" routerLinkActive="active">Analytics Avanzate</a></li>
+    </ul>
+  </nav>
+
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

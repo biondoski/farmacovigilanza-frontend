@@ -1,0 +1,77 @@
+<div class="list-container">
+  <div class="list-header">
+    <h1>Archivio Segnalazioni</h1>
+    <div>
+      <button (click)="onExport()" class="btn-secondary">Esporta CSV</button>
+      <a routerLink="/reports/new" class="btn-primary">Aggiungi Segnalazione</a>
+    </div>
+  </div>
+
+  <form [formGroup]="filterForm" class="filter-bar">
+    <input type="text" placeholder="Filtra per farmaco..." formControlName="farmaco">
+    <select formControlName="gravita">
+      <option value="">Tutte le gravità</option>
+      <option value="Lieve">Lieve</option>
+      <option value="Moderata">Moderata</option>
+      <option value="Grave">Grave</option>
+    </select>
+    <input type="date" formControlName="dataDa" title="Data Da">
+    <input type="date" formControlName="dataA" title="Data A">
+  </form>
+
+  <div *ngIf="isLoading" class="loading">Caricamento...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <div *ngIf="!isLoading && !error" class="table-container">
+    <table>
+      <thead>
+      <tr>
+        <th (click)="onSort('createdAt')">
+          Data
+          <fa-icon *ngIf="sortColumn === 'createdAt'" [icon]="sortOrder === 'asc' ? faSortUp : faSortDown"></fa-icon>
+          <fa-icon *ngIf="sortColumn !== 'createdAt'" [icon]="faSort" class="sort-placeholder"></fa-icon>
+        </th>
+        <th (click)="onSort('farmaco.nomeCommerciale')">
+          Farmaco
+          <fa-icon *ngIf="sortColumn === 'farmaco.nomeCommerciale'" [icon]="sortOrder === 'asc' ? faSortUp : faSortDown"></fa-icon>
+          <fa-icon *ngIf="sortColumn !== 'farmaco.nomeCommerciale'" [icon]="faSort" class="sort-placeholder"></fa-icon>
+        </th>
+        <th>Età Paziente</th>
+        <th>Gravità</th>
+        <th>Inserito da</th>
+        <th>Azioni</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let report of paginatedData?.reports">
+        <td>{{ report.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+        <td>{{ report.farmaco.nomeCommerciale }}</td>
+        <td>{{ report.paziente.eta }}</td>
+        <td><span class="gravita-badge gravita-{{ report.reazione.gravita.toLowerCase() }}">{{ report.reazione.gravita }}</span></td>
+        <td>{{ report.submittedBy?.name }}</td>
+        <td>
+          <a [routerLink]="['/reports/edit', report._id]" class="btn-secondary">Modifica</a>
+        </td>
+      </tr>
+      <tr *ngIf="!paginatedData || paginatedData.reports.length === 0">
+        <td colspan="6">Nessuna segnalazione trovata con i filtri correnti.</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="paginatedData && paginatedData.totalPages > 1" class="pagination-controls">
+    <button (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">Precedente</button>
+
+    <ng-container *ngFor="let page of paginator">
+      <button *ngIf="isNumber(page)"
+              (click)="goToPage(page)"
+              [class.active]="currentPage === page">
+        {{ page }}
+      </button>
+      <span *ngIf="!isNumber(page)" class="ellipsis">{{ page }}</span>
+    </ng-container>
+
+    <button (click)="goToPage(currentPage + 1)" [disabled]="currentPage === paginatedData.totalPages">Successiva</button>
+  </div>
+</div>
