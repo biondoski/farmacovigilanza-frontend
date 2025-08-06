@@ -1,83 +1,133 @@
 <div class="form-container">
-  <h1>{{ isEditMode ? 'Modifica Segnalazione' : 'Crea Nuova Segnalazione' }}</h1>
+  <h1>{{ isEditMode ? 'Modifica Segnalazione' : 'Nuova Segnalazione ADR' }}</h1>
+  <p>Compila la scheda in tutte le sue parti. I campi contrassegnati con * sono obbligatori.</p>
 
-  <div *ngIf="isLoading" class="loading">Caricamento...</div>
+  <form [formGroup]="reportForm" (ngSubmit)="onSubmit()">
 
-  <form [formGroup]="reportForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
-
-    <fieldset formGroupName="farmaco">
-      <legend>Dati Farmaco</legend>
-      <div class="form-group">
-        <label for="nomeCommerciale">Nome Commerciale</label>
-        <input id="nomeCommerciale" type="text" formControlName="nomeCommerciale">
-      </div>
-      <div class="form-group">
-        <label for="principioAttivo">Principio Attivo</label>
-        <input id="principioAttivo" type="text" formControlName="principioAttivo">
-      </div>
-      <div class="form-group">
-        <label for="lotto">Lotto (opzionale)</label>
-        <input id="lotto" type="text" formControlName="lotto">
+    <fieldset>
+      <legend>Tipo di Segnalazione</legend>
+      <div class.form-group>
+        <label>Tipo Segnalazione*</label>
+        <select formControlName="tipoSegnalazione">
+          <option value="Cittadino">Da Cittadino/Paziente</option>
+          <option value="Sanitario">Da Operatore Sanitario</option>
+        </select>
       </div>
     </fieldset>
 
     <fieldset formGroupName="paziente">
-      <legend>Dati Paziente</legend>
-      <div class="form-group">
-        <label for="eta">Età</label>
-        <input id="eta" type="number" formControlName="eta">
-      </div>
-      <div class="form-group">
-        <label for="sesso">Sesso</label>
-        <select id="sesso" formControlName="sesso">
-          <option value="" disabled>Seleziona...</option>
-          <option value="M">Maschio</option>
-          <option value="F">Femmina</option>
-          <option value="Altro">Altro</option>
-        </select>
+      <legend>1. Informazioni sul Paziente</legend>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Iniziali*</label>
+          <input type="text" formControlName="iniziali" maxlength="3">
+        </div>
+        <div class="form-group">
+          <label>Età*</label>
+          <input type="number" formControlName="eta">
+        </div>
+        <div class="form-group">
+          <label>Sesso*</label>
+          <select formControlName="sesso">
+            <option value="" disabled>Seleziona...</option>
+            <option value="M">Maschio</option>
+            <option value="F">Femmina</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Peso (kg)</label>
+          <input type="number" formControlName="peso">
+        </div>
+        <div class="form-group">
+          <label>Altezza (cm)</label>
+          <input type="number" formControlName="altezza">
+        </div>
       </div>
     </fieldset>
 
     <fieldset formGroupName="reazione">
-      <legend>Dati Reazione</legend>
+      <legend>2. Descrizione della Reazione Avversa (ADR)</legend>
       <div class="form-group">
-        <label for="descrizione">Descrizione della Reazione</label>
-        <textarea id="descrizione" rows="5" formControlName="descrizione"></textarea>
+        <label>Descrizione completa della reazione*</label>
+        <textarea rows="4" formControlName="descrizione"></textarea>
       </div>
-      <div class="form-group">
-        <label for="gravita">Gravità</label>
-        <select id="gravita" formControlName="gravita">
-          <option value="Sconosciuta">Sconosciuta</option>
-          <option value="Lieve">Lieve</option>
-          <option value="Moderata">Moderata</option>
-          <option value="Grave">Grave</option>
-        </select>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Data di Inizio*</label>
+          <input type="date" formControlName="dataInizio">
+        </div>
+        <div class="form-group">
+          <label>Esito della Reazione*</label>
+          <select formControlName="esito">
+            <option value="" disabled>Seleziona...</option>
+            <option>Guarigione completa</option>
+            <option>In via di guarigione</option>
+            <option>Guarigione con postumi</option>
+            <option>Persistenza della reazione</option>
+            <option>Decesso</option>
+            <option>Sconosciuto</option>
+          </select>
+        </div>
+        <div class="form-group checkbox-group" formGroupName="gravita">
+          <label>La reazione è grave?</label>
+          <input type="checkbox" formControlName="isGrave">
+        </div>
       </div>
+    </fieldset>
+
+    <fieldset formArrayName="farmaciSospetti">
+      <legend>3. Farmaci Sospetti</legend>
+      <div *ngFor="let farmaco of farmaciSospetti.controls; let i = index" [formGroupName]="i" class="form-array-item">
+        <h4>Farmaco Sospetto #{{ i + 1 }}</h4>
+        <div class="form-grid">
+          <div class="form-group"><label>Nome Commerciale*</label><input type="text" formControlName="nomeCommerciale"></div>
+          <div class="form-group"><label>Principio Attivo</label><input type="text" formControlName="principioAttivo"></div>
+          <div class="form-group"><label>N. Lotto</label><input type="text" formControlName="lotto"></div>
+          <div class="form-group"><label>Dosaggio</label><input type="text" formControlName="dosaggio"></div>
+          <div class="form-group"><label>Data Inizio Terapia</label><input type="date" formControlName="dataInizioTerapia"></div>
+          <div class="form-group"><label>Data Fine Terapia</label><input type="date" formControlName="dataFineTerapia"></div>
+        </div>
+        <div class="form-group">
+          <label>Indicazione d'Uso (perché è stato assunto?)</label>
+          <textarea rows="2" formControlName="indicazioneUso"></textarea>
+        </div>
+        <button type="button" class="btn-danger" (click)="rimuoviFarmacoSospetto(i)" *ngIf="farmaciSospetti.controls.length > 1">Rimuovi Farmaco</button>
+      </div>
+      <button type="button" class="btn-secondary" (click)="aggiungiFarmacoSospetto()">+ Aggiungi Farmaco Sospetto</button>
+    </fieldset>
+
+    <fieldset formArrayName="farmaciConcomitanti">
+      <legend>4. Altri Farmaci Assunti (Concomitanti)</legend>
+      <div *ngFor="let farmaco of farmaciConcomitanti.controls; let i = index" [formGroupName]="i" class="form-array-item">
+        <h4>Farmaco Concomitante #{{ i + 1 }}</h4>
+        <div class="form-grid">
+          <div class="form-group"><label>Nome Commerciale*</label><input type="text" formControlName="nomeCommerciale"></div>
+        </div>
+        <button type="button" class="btn-danger" (click)="rimuoviFarmacoConcomitante(i)">Rimuovi Farmaco</button>
+      </div>
+      <button type="button" class="btn-secondary" (click)="aggiungiFarmacoConcomitante()">+ Aggiungi Farmaco Concomitante</button>
     </fieldset>
 
     <fieldset formGroupName="localita">
       <legend>Località (opzionale)</legend>
-      <div class="form-group-inline">
+      <div class="form-grid-inline">
         <div class="form-group">
-          <label for="lat">Latitudine</label>
-          <input id="lat" type="number" formControlName="lat">
+          <label>Latitudine</label>
+          <input type="number" formControlName="lat">
         </div>
         <div class="form-group">
-          <label for="lon">Longitudine</label>
-          <input id="lon" type="number" formControlName="lon">
+          <label>Longitudine</label>
+          <input type="number" formControlName="lon">
         </div>
       </div>
     </fieldset>
 
     <div class="form-actions">
-      <button type="submit" [disabled]="reportForm.invalid || isLoading">
-        {{ isLoading ? 'Salvataggio...' : (isEditMode ? 'Salva Modifiche' : 'Crea Segnalazione') }}
+      <button type="submit" class="btn-primary" [disabled]="reportForm.invalid || isLoading">
+        {{ isLoading ? 'Salvataggio...' : (isEditMode ? 'Salva Modifiche' : 'Invia Segnalazione') }}
       </button>
       <a routerLink="/reports" class="btn-secondary">Annulla</a>
     </div>
-
-    <div *ngIf="errorMessage" class="error-message">
-      {{ errorMessage }}
-    </div>
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
   </form>
 </div>

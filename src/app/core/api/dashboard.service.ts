@@ -8,16 +8,18 @@ export interface DashboardSummary {
   reportsBySeverity: { _id: string, count: number }[];
   top5Drugs: { _id: string, count: number }[];
   last5Reports: {
-    farmaco: { nomeCommerciale: string };
-    reazione: { gravita: string };
+    farmaciSospetti: { nomeCommerciale: string }[];
+    reazione: { esito: string };
     createdAt: string;
   }[];
   reportLocations: {
     localita: { coordinates: [number, number] };
-    farmaco: { nomeCommerciale: string }
-    reazione: { gravita: string };
+    farmaciSospetti: { nomeCommerciale: string }[];
+    reazione: { gravita: { isGrave: boolean } };
   }[];
   totalGraveReports: number;
+  reportsBySource: { _id: string, count: number }[];
+  reportsByGender: { _id: string, count: number }[];
 }
 
 @Injectable({

@@ -34,16 +34,15 @@ export class ReportListComponent implements OnInit {
   ) {
     this.filterForm = this.fb.group({
       farmaco: [''],
-      gravita: [''],
       dataDa: [''],
       dataA: ['']
     });
   }
 
   ngOnInit(): void {
-    this.route.queryParams.pipe(take(1)).subscribe(params => {
+    this.route.queryParams.pipe(take(1)).subscribe((params: any) => {
       if (params['farmaco']) {
-        this.filterForm.patchValue({ farmaco: params['farmaco'] });
+        this.filterForm.patchValue({ farmaco: params['farmaco'] }, { emitEvent: false });
       }
     });
 
@@ -55,10 +54,10 @@ export class ReportListComponent implements OnInit {
     });
   }
 
-
   loadReports(): void {
     this.isLoading = true;
     const sortParams = { sortBy: this.sortColumn, sortOrder: this.sortOrder };
+
     this.reportService.getReports(this.currentPage, this.filterForm.value, sortParams).subscribe({
       next: (data) => {
         this.paginatedData = data;
@@ -68,7 +67,6 @@ export class ReportListComponent implements OnInit {
       error: (err) => {
         this.error = 'Impossibile caricare le segnalazioni.';
         this.isLoading = false;
-        console.error(err);
       }
     });
   }
@@ -80,6 +78,7 @@ export class ReportListComponent implements OnInit {
       this.sortColumn = column;
       this.sortOrder = 'asc';
     }
+    this.currentPage = 1;
     this.loadReports();
   }
 
@@ -91,22 +90,22 @@ export class ReportListComponent implements OnInit {
   }
 
   onExport(): void {
-    this.reportService.exportReports().subscribe(blob => {
-      const a = document.createElement('a');
-      const objectUrl = URL.createObjectURL(blob);
-
-      a.href = objectUrl;
-      a.download = 'segnalazioni.csv';
-
-      a.click();
-
-      URL.revokeObjectURL(objectUrl);
+    this.reportService.exportReports().subscribe({
+      next: (blob) => {
+        const a = document.createElement('a');
+        const objectUrl = URL.createObjectURL(blob);
+        a.href = objectUrl;
+        a.download = 'segnalazioni.csv';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(objectUrl);
+      },
+      error: (err) => {
+        console.error("Errore durante il download del CSV", err);
+        alert("Si è verificato un errore durante l'esportazione.");
+      }
     });
-  }
-
-  getPages(): number[] {
-    if (!this.paginatedData) return [];
-    return Array(this.paginatedData.totalPages).fill(0).map((x, i) => i + 1);
   }
 
   isNumber(value: any): value is number {
@@ -137,8 +136,8 @@ export class ReportListComponent implements OnInit {
       if (currentPage < pagesToShow) {
         endPage = pagesToShow;
       }
-      if (currentPage > totalPages - (pagesToShow-1)) {
-        startPage = totalPages - (pagesToShow-1);
+      if (currentPage > totalPages - (pagesToShow - 1)) {
+        startPage = totalPages - (pagesToShow - 1);
       }
 
       if (startPage > 2) {

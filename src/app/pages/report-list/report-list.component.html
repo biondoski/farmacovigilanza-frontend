@@ -9,12 +9,6 @@
 
   <form [formGroup]="filterForm" class="filter-bar">
     <input type="text" placeholder="Filtra per farmaco..." formControlName="farmaco">
-    <select formControlName="gravita">
-      <option value="">Tutte le gravità</option>
-      <option value="Lieve">Lieve</option>
-      <option value="Moderata">Moderata</option>
-      <option value="Grave">Grave</option>
-    </select>
     <input type="date" formControlName="dataDa" title="Data Da">
     <input type="date" formControlName="dataA" title="Data A">
   </form>
@@ -31,12 +25,13 @@
           <fa-icon *ngIf="sortColumn === 'createdAt'" [icon]="sortOrder === 'asc' ? faSortUp : faSortDown"></fa-icon>
           <fa-icon *ngIf="sortColumn !== 'createdAt'" [icon]="faSort" class="sort-placeholder"></fa-icon>
         </th>
-        <th (click)="onSort('farmaco.nomeCommerciale')">
-          Farmaco
-          <fa-icon *ngIf="sortColumn === 'farmaco.nomeCommerciale'" [icon]="sortOrder === 'asc' ? faSortUp : faSortDown"></fa-icon>
-          <fa-icon *ngIf="sortColumn !== 'farmaco.nomeCommerciale'" [icon]="faSort" class="sort-placeholder"></fa-icon>
+        <th>Farmaco Sospetto</th>
+        <th (click)="onSort('paziente.eta')">
+          Età Paziente
+          <fa-icon *ngIf="sortColumn === 'paziente.eta'" [icon]="sortOrder === 'asc' ? faSortUp : faSortDown"></fa-icon>
+          <fa-icon *ngIf="sortColumn !== 'paziente.eta'" [icon]="faSort" class="sort-placeholder"></fa-icon>
         </th>
-        <th>Età Paziente</th>
+        <th>Esito</th>
         <th>Gravità</th>
         <th>Inserito da</th>
         <th>Azioni</th>
@@ -45,16 +40,21 @@
       <tbody>
       <tr *ngFor="let report of paginatedData?.reports">
         <td>{{ report.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
-        <td>{{ report.farmaco.nomeCommerciale }}</td>
+        <td>{{ report.farmaciSospetti[0]?.nomeCommerciale || 'N/D' }}</td>
         <td>{{ report.paziente.eta }}</td>
-        <td><span class="gravita-badge gravita-{{ report.reazione.gravita.toLowerCase() }}">{{ report.reazione.gravita }}</span></td>
+        <td>{{ report.reazione.esito }}</td>
+        <td>
+            <span class="gravita-badge" [class.gravita-grave]="report.reazione.gravita.isGrave" [class.gravita-lieve]="!report.reazione.gravita.isGrave">
+              {{ report.reazione.gravita.isGrave ? 'Grave' : 'Non Grave' }}
+            </span>
+        </td>
         <td>{{ report.submittedBy?.name }}</td>
         <td>
           <a [routerLink]="['/reports/edit', report._id]" class="btn-secondary">Modifica</a>
         </td>
       </tr>
       <tr *ngIf="!paginatedData || paginatedData.reports.length === 0">
-        <td colspan="6">Nessuna segnalazione trovata con i filtri correnti.</td>
+        <td colspan="7">Nessuna segnalazione trovata con i filtri correnti.</td>
       </tr>
       </tbody>
     </table>
