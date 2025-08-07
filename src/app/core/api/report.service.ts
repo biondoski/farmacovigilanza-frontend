@@ -74,10 +74,10 @@ export class ReportService {
 
   constructor(private http: HttpClient) { }
 
-  getReports(page: number, filters: any, sort: { sortBy: string, sortOrder: string }): Observable<PaginatedReports> {
+  getReports(page: number, filters: any, sort: { sortBy: string, sortOrder: string }, limit: number = 10): Observable<PaginatedReports> {
     let params = new HttpParams()
       .set('page', page.toString())
-      .set('limit', '10')
+      .set('limit', limit.toString())
       .set('sortBy', sort.sortBy)
       .set('sortOrder', sort.sortOrder);
 

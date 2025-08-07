@@ -24,6 +24,10 @@
           <mat-icon mat-list-icon>analytics</mat-icon>
           Analytics Avanzate
         </a>
+        <a mat-list-item *ngIf="canViewAnalytics" routerLink="/ai-analyzer" routerLinkActive="active">
+          <mat-icon mat-list-icon>psychology</mat-icon>
+          Assistente AI
+        </a>
         <a mat-list-item *ngIf="isAdmin" routerLink="/admin/users" routerLinkActive="active">
           <mat-icon mat-list-icon>people</mat-icon>
           Gestione Utenti

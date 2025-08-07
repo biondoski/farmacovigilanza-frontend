@@ -8,6 +8,7 @@ import { ReportFormComponent } from './pages/report-form/report-form.component';
 import { AnalyticsComponent } from './pages/analytics/analytics.component';
 import { AuthGuard } from './core/auth/auth.guard';
 import { UserManagementComponent } from './pages/admin/user-management/user-management.component';
+import { AiAnalyzerComponent } from './pages/ai-analyzer/ai-analyzer.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -31,6 +32,11 @@ const routes: Routes = [
         path: 'admin/users',
         component: UserManagementComponent,
         data: { role: 'Admin' }
+      },
+      {
+        path: 'ai-analyzer',
+        component: AiAnalyzerComponent,
+        data: { role: 'Analista' }
       },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]

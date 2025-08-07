@@ -1,0 +1,72 @@
+<div class="analyzer-container">
+  <h1>Assistente AI per l'Analisi delle Segnalazioni</h1>
+  <p>Seleziona o cerca una segnalazione dall'archivio per ottenere un'analisi generata dall'AI.</p>
+
+  <mat-card appearance="outlined" class="selection-card">
+    <mat-card-content>
+      <mat-form-field appearance="outline">
+        <mat-label>Seleziona una Segnalazione</mat-label>
+        <mat-select [formControl]="selectedReport">
+          <mat-option>
+            <ngx-mat-select-search [formControl]="reportFilterCtrl" placeholderLabel="Cerca segnalazione..."></ngx-mat-select-search>
+          </mat-option>
+
+          <mat-option *ngFor="let report of filteredReports | async" [value]="report._id">
+            {{ report.createdAt | date:'dd/MM/yy' }} |
+            {{ report.farmaciSospetti[0]?.nomeCommerciale }} |
+            Paziente: {{ report.paziente.iniziali }} ({{ report.paziente.eta }}, {{ report.paziente.sesso }}) |
+            Gravità: {{ report.reazione.gravita.isGrave ? 'Grave' : 'Non Grave' }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-flat-button color="primary" (click)="onAnalyze()" [disabled]="selectedReport.invalid || isLoadingAnalysis">
+        <mat-icon>psychology</mat-icon>
+        Analizza con AI
+      </button>
+    </mat-card-content>
+  </mat-card>
+
+  <div *ngIf="isLoadingAnalysis" class="loading-spinner">
+    <mat-spinner></mat-spinner>
+    <p>L'intelligenza artificiale sta analizzando il caso...</p>
+  </div>
+
+  <div *ngIf="error" class="error-message">{{ error }}</div>
+
+  <div *ngIf="analysisResult" class="results-container">
+    <h2>Risultati dell'Analisi</h2>
+
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Riepilogo del Caso</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{ analysisResult.riepilogo }}</p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Identificazione Rischi Potenziali</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{ analysisResult.rischiPotenziali }}</p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Suggerimenti Classificazione MedDRA</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-chip-list aria-label="Classificazione MedDRA">
+          <mat-chip *ngFor="let term of analysisResult.classificazioneMedDRA" color="accent" selected>
+            {{ term }}
+          </mat-chip>
+        </mat-chip-list>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+</div>

@@ -1,6 +1,6 @@
 # Piattaforma di Farmacovigilanza - Frontend
 
-Questo repository contiene il codice sorgente per l'applicazione frontend della Piattaforma di Farmacovigilanza. È una **Single Page Application (SPA)** sviluppata con **Angular** per fornire un'interfaccia utente moderna e reattiva per l'inserimento e l'analisi di dati farmaceutici complessi.
+Questo repository contiene il codice sorgente per l'applicazione frontend della Piattaforma di Farmacovigilanza. È una **Single Page Application (SPA)** sviluppata con **Angular** e stilizzata con **Angular Material** per fornire un'interfaccia utente moderna, responsiva e professionale per l'inserimento e l'analisi di dati farmaceutici complessi.
 
 ---
 
@@ -16,30 +16,33 @@ Questo repository contiene il codice sorgente per l'applicazione frontend della 
 
 ## Funzionalità Principali
 
-* ✨ **Interfaccia Moderna e Interattiva:** Design responsivo con una dashboard analitica ricca di componenti visivi.
-* 🔐 **Flusso di Autenticazione Completo:** Pagine di login, registrazione e gestione del token JWT tramite `localStorage`.
+* ✨ **Interfaccia in Material Design:** UI pulita e responsiva costruita interamente con i componenti ufficiali di Angular Material.
+* 🔐 **Flusso di Autenticazione Completo:** Pagine di login e gestione del token JWT tramite `localStorage`.
 * 🛡️ **Navigazione Protetta:** Utilizzo di **Route Guards** per proteggere le pagine in base allo stato di login e al ruolo dell'utente (`Operatore`, `Analista`, `Admin`).
-* 📝 **Form AIFA Complesso:** Implementazione di un form reattivo multi-sezione basato sulle schede ufficiali AIFA, con gestione dinamica di farmaci multipli (`FormArray`).
+* 📝 **Form Complesso Conforme AIFA:** Implementazione di un form reattivo multi-sezione basato sulle schede ufficiali AIFA, con gestione dinamica di farmaci multipli (`FormArray`).
 * 📈 **Dashboard Analitica Avanzata:**
-  * Visualizzazione di KPI (Indicatori Chiave di Performance).
+  * Visualizzazione di KPI (Indicatori Chiave di Performance) colorati dinamicamente.
   * Grafici interattivi (barre, torte, heatmap) realizzati con **ngx-charts**.
   * Doppia visualizzazione geografica con **Leaflet**: una mappa con marker colorati per farmaco e una heatmap per la densità delle segnalazioni, entrambe con legende dinamiche.
-* 🗂️ **Tabella Dati Interattiva:** Lista delle segnalazioni con filtri avanzati (per farmaco e data), ordinamento lato server e paginazione intelligente.
+* 🗂️ **Tabella Dati Interattiva:** Lista delle segnalazioni con filtri avanzati, ordinamento lato server e paginazione intelligente, costruita con `mat-table` e design responsivo "card-view" per mobile.
 * 📄 **Esportazione CSV:** Funzionalità di download dei dati direttamente dal browser.
-* 👤 **Sezione di Amministrazione:** Interfaccia CRUD completa per la gestione degli utenti (creazione, visualizzazione, modifica, eliminazione) in un modal riutilizzabile, accessibile solo all'Admin.
+* 👤 **Sezione di Amministrazione:** Interfaccia CRUD completa per la gestione degli utenti (creazione, visualizzazione, modifica, eliminazione) in un dialog riutilizzabile, accessibile solo all'Admin.
+* 🤖 **Pagina Assistente AI:** Una pagina dedicata dove gli utenti possono selezionare una segnalazione e ricevere un'analisi intelligente (riepilogo, rischi potenziali, suggerimenti MedDRA) generata tramite l'**API di Google Gemini**.
 
 ---
 
 ## Stack Tecnologico
 
 * **Framework:** Angular
+* **Componenti UI:** Angular Material
 * **Linguaggio:** TypeScript
 * **Styling:** SCSS
 * **Grafici:** `ngx-charts`
 * **Mappe:** `Leaflet` e `leaflet.heat`
-* **Icone:** `Font Awesome`
+* **Icone:** `@fortawesome/angular-fontawesome`
 * **Gestione Asincrona:** RxJS
 * **Gestione Form:** Angular Reactive Forms (`FormGroup`, `FormArray`)
+* **Select con Ricerca:** `ngx-mat-select-search`
 
 ---
 
@@ -54,7 +57,7 @@ Questo repository contiene il codice sorgente per l'applicazione frontend della 
 
 1.  **Clonare il repository:**
     ```bash
-    git clone <URL_DEL_REPOSITORY>
+    git clone <URL_DEL_REPOSITORY_FRONTEND>
     cd farmacovigilanza-frontend
     ```
 

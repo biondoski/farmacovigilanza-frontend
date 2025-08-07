@@ -1,0 +1,42 @@
+.analyzer-container {
+  padding: 24px;
+}
+
+.selection-card {
+  mat-card-content {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  mat-form-field {
+    flex: 1 1 300px;
+  }
+}
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem;
+  gap: 16px;
+  color: rgba(0,0,0,0.54);
+}
+
+.results-container {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  h2 {
+    border-bottom: 1px solid rgba(0,0,0,0.12);
+    padding-bottom: 8px;
+  }
+
+  mat-card-content p {
+    line-height: 1.6;
+  }
+}
