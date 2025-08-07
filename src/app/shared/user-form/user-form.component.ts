@@ -1,21 +1,22 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UserService, AppUser } from '../../core/api/user.service';
+import { AppUser } from '../../core/api/user.service';
 
 @Component({
   selector: 'app-user-form',
   templateUrl: './user-form.component.html',
   styleUrls: ['./user-form.component.scss']
 })
-export class UserFormComponent implements OnInit, OnChanges {
-  @Input() userToEdit: AppUser | null = null;
-  @Output() formClosed = new EventEmitter<AppUser | null>();
-
+export class UserFormComponent implements OnInit {
   userForm: FormGroup;
   isEditMode = false;
-  isLoading = false;
 
-  constructor(private fb: FormBuilder, private userService: UserService) {
+  constructor(
+    private fb: FormBuilder,
+    public dialogRef: MatDialogRef<UserFormComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { userToEdit: AppUser | null }
+  ) {
     this.userForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -25,46 +26,22 @@ export class UserFormComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.updateFormBasedOnMode();
-  }
-
-  ngOnChanges(): void {
-    this.updateFormBasedOnMode();
-  }
-
-  updateFormBasedOnMode(): void {
-    if (this.userToEdit) {
+    if (this.data.userToEdit) {
       this.isEditMode = true;
-      this.userForm.patchValue(this.userToEdit);
+      this.userForm.patchValue(this.data.userToEdit);
       this.userForm.get('password')?.clearValidators();
     } else {
-      this.isEditMode = false;
-      this.userForm.reset({ role: 'Operatore' });
       this.userForm.get('password')?.setValidators([Validators.required, Validators.minLength(6)]);
     }
     this.userForm.get('password')?.updateValueAndValidity();
   }
 
-  onSubmit(): void {
+  onSave(): void {
     if (this.userForm.invalid) return;
-
-    this.isLoading = true;
-    const userData = this.userForm.value;
-
-    if (this.isEditMode && this.userToEdit) {
-      this.userService.updateUser(this.userToEdit._id, userData).subscribe(updatedUser => {
-        this.isLoading = false;
-        this.formClosed.emit(updatedUser);
-      });
-    } else {
-      this.userService.createUser(userData).subscribe(newUser => {
-        this.isLoading = false;
-        this.formClosed.emit(newUser);
-      });
-    }
+    this.dialogRef.close(this.userForm.value);
   }
 
-  close(): void {
-    this.formClosed.emit(null);
+  onCancel(): void {
+    this.dialogRef.close();
   }
 }

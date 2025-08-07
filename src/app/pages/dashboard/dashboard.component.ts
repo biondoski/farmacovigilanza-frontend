@@ -242,4 +242,21 @@ export class DashboardComponent implements OnInit {
       this.heatmapLegendControl = legend.addTo(this.heatmap);
     }
   }
+
+  getEsitoClass(esito?: string): string {
+    if (!esito) return '';
+
+    switch (esito) {
+      case 'Guarigione completa':
+      case 'In via di guarigione':
+        return 'esito-guarigione';
+      case 'Decesso':
+        return 'esito-decesso';
+      case 'Persistenza della reazione':
+      case 'Guarigione con postumi':
+        return 'esito-persistenza';
+      default:
+        return '';
+    }
+  }
 }

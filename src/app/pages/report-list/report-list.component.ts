@@ -3,12 +3,19 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Report, ReportService, PaginatedReports } from '../../core/api/report.service';
 import { take } from 'rxjs/operators';
-import { faSort, faSortUp, faSortDown } from '@fortawesome/free-solid-svg-icons';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-report-list',
   templateUrl: './report-list.component.html',
-  styleUrls: ['./report-list.component.scss']
+  styleUrls: ['./report-list.component.scss'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed, void', style({ height: '0px', minHeight: '0', padding: '0 24px' })),
+      state('expanded', style({ height: '*' })),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
 })
 export class ReportListComponent implements OnInit {
   paginatedData: PaginatedReports | null = null;
@@ -21,11 +28,8 @@ export class ReportListComponent implements OnInit {
   sortColumn: string = 'createdAt';
   sortOrder: 'asc' | 'desc' = 'desc';
 
-  faSort = faSort;
-  faSortUp = faSortUp;
-  faSortDown = faSortDown;
-
-  paginator: (string | number)[] = [];
+  displayedColumns: string[] = ['data', 'farmaco', 'eta', 'esito', 'gravita', 'segnalatore', 'azioni'];
+  expandedElement: Report | null = null;
 
   constructor(
     private reportService: ReportService,
@@ -61,7 +65,6 @@ export class ReportListComponent implements OnInit {
     this.reportService.getReports(this.currentPage, this.filterForm.value, sortParams).subscribe({
       next: (data) => {
         this.paginatedData = data;
-        this.updatePaginator();
         this.isLoading = false;
       },
       error: (err) => {
@@ -82,11 +85,9 @@ export class ReportListComponent implements OnInit {
     this.loadReports();
   }
 
-  goToPage(page: number): void {
-    if (page >= 1 && page <= (this.paginatedData?.totalPages || 1)) {
-      this.currentPage = page;
-      this.loadReports();
-    }
+  handlePageEvent(event: any): void {
+    this.currentPage = event.pageIndex + 1;
+    this.loadReports();
   }
 
   onExport(): void {
@@ -102,59 +103,8 @@ export class ReportListComponent implements OnInit {
         window.URL.revokeObjectURL(objectUrl);
       },
       error: (err) => {
-        console.error("Errore durante il download del CSV", err);
         alert("Si è verificato un errore durante l'esportazione.");
       }
     });
-  }
-
-  isNumber(value: any): value is number {
-    return typeof value === 'number';
-  }
-
-  private updatePaginator(): void {
-    if (!this.paginatedData) {
-      this.paginator = [];
-      return;
-    }
-
-    const currentPage = this.paginatedData.currentPage;
-    const totalPages = this.paginatedData.totalPages;
-    const pagesToShow = 5;
-    const pages: (string | number)[] = [];
-
-    if (totalPages <= pagesToShow + 2) {
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i);
-      }
-    } else {
-      pages.push(1);
-
-      let startPage = Math.max(2, currentPage - 2);
-      let endPage = Math.min(totalPages - 1, currentPage + 2);
-
-      if (currentPage < pagesToShow) {
-        endPage = pagesToShow;
-      }
-      if (currentPage > totalPages - (pagesToShow - 1)) {
-        startPage = totalPages - (pagesToShow - 1);
-      }
-
-      if (startPage > 2) {
-        pages.push('...');
-      }
-
-      for (let i = startPage; i <= endPage; i++) {
-        pages.push(i);
-      }
-
-      if (endPage < totalPages - 1) {
-        pages.push('...');
-      }
-
-      pages.push(totalPages);
-    }
-
-    this.paginator = pages;
   }
 }

@@ -1,132 +1,93 @@
+@use '@angular/material' as mat;
+
 .analytics-container {
-  h1 {
-    border-bottom: 2px solid #eee;
-    padding-bottom: 0.5rem;
-  }
-  p {
-    color: #666;
-    margin-bottom: 2rem;
-  }
-}
-
-.card {
-  background-color: #fff;
-  padding: 1.5rem 2rem;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-  margin-bottom: 2rem;
-}
-
-.filter-form {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  margin-top: 1rem;
-  margin-bottom: 2rem;
-  flex-wrap: wrap;
-
-  input {
-    padding: 0.75rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-
-  button {
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 4px;
-    background-color: #28a745;
-    color: white;
-    cursor: pointer;
-
-    &:disabled {
-      background-color: #ccc;
-    }
-  }
-}
-
-.chart-container {
-  height: 400px;
-}
-
-.loading {
-  text-align: center;
-  padding: 2rem;
-  color: #666;
-}
-
-.add-user-form {
-  background-color: #f8f9fa;
-  padding: 1.5rem;
-  border-radius: 8px;
-  margin-bottom: 2rem;
-
-  h2 {
-    margin-top: 0;
-  }
-
-  form {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1rem;
-  }
-
-  button {
-    grid-column: 1 / -1;
-    justify-self: start;
-  }
+  padding: 24px;
 }
 
 .filter-card {
-  margin-bottom: 2rem;
   form {
     display: flex;
-    gap: 1rem;
+    gap: 16px;
     align-items: center;
     flex-wrap: wrap;
-    input {
-      padding: 0.75rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+
+    mat-form-field {
+      flex: 1 1 200px;
     }
+
     button {
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: 4px;
-      background-color: #007bff;
-      color: white;
-      cursor: pointer;
-      &:disabled { background-color: #ccc; }
+      height: 56px;
     }
   }
+}
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem;
+  gap: 16px;
+  color: rgba(0,0,0,0.54);
 }
 
 .analytics-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
 }
 
-.table-container {
+.chart-container {
+  height: 350px;
   width: 100%;
-  margin-top: 1rem;
+  display: block;
+}
+
+mat-card-subtitle {
+  margin-bottom: 16px;
+}
+
+.lot-card {
+  grid-column: 1 / -1;
+
+  .table-container {
+    width: 100%;
+    overflow-x: auto;
+  }
+
   table {
     width: 100%;
-    border-collapse: collapse;
-    th, td {
-      padding: 0.75rem;
-      text-align: left;
-      border-bottom: 1px solid #f0f0f0;
-    }
-    thead {
-      background-color: #f8f9fa;
-    }
-    .text-center { text-align: center; }
-    .danger-text { color: #dc3545; font-weight: bold; }
+  }
+
+  .danger-text {
+    color: mat.get-color-from-palette(mat.$red-palette, 500);
+    font-weight: bold;
   }
 }
 
 .heatmap-card {
   grid-column: 1 / -1;
+}
+
+@media (max-width: 768px) {
+  .analytics-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .lot-card {
+    width: 100%;
+    max-width: 450px;
+  }
+
+  .kpi-card{
+    width: 100%;
+    max-width: 450px;
+  }
+
+  .chart-card{
+    width: 100%;
+  }
 }

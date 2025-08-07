@@ -20,6 +20,7 @@ import { JwtInterceptor } from './core/auth/jwt.interceptor';
 import { UserManagementComponent } from './pages/admin/user-management/user-management.component';
 import { UserFormComponent } from './shared/user-form/user-form.component';
 import { InfiniteScrollDirective } from './shared/directives/infinite-scroll.directive';
+import { MaterialModule } from './shared/material/material.module';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { InfiniteScrollDirective } from './shared/directives/infinite-scroll.dir
     ReactiveFormsModule,
     BrowserAnimationsModule,
     NgxChartsModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    MaterialModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }

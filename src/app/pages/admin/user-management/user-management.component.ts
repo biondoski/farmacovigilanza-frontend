@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService, AppUser } from '../../../core/api/user.service';
 import { AuthService } from '../../../core/auth/auth.service';
+import { UserFormComponent } from '../../../shared/user-form/user-form.component';
 
 @Component({
   selector: 'app-user-management',
@@ -9,15 +12,15 @@ import { AuthService } from '../../../core/auth/auth.service';
 })
 export class UserManagementComponent implements OnInit {
   users: AppUser[] = [];
+  displayedColumns: string[] = ['name', 'email', 'role', 'actions'];
   currentUserId: string | null = null;
   isLoading = true;
 
-  isModalOpen = false;
-  selectedUser: AppUser | null = null;
-
   constructor(
     private userService: UserService,
-    private authService: AuthService
+    private authService: AuthService,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -32,29 +35,36 @@ export class UserManagementComponent implements OnInit {
       this.isLoading = false;
     });
   }
+
+  openUserDialog(userToEdit: AppUser | null = null): void {
+    const dialogRef = this.dialog.open(UserFormComponent, {
+      width: '500px',
+      data: { userToEdit }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        if (userToEdit) {
+          this.userService.updateUser(userToEdit._id, result).subscribe(() => {
+            this.snackBar.open('Utente aggiornato con successo', 'Chiudi', { duration: 3000 });
+            this.loadUsers();
+          });
+        } else {
+          this.userService.createUser(result).subscribe(() => {
+            this.snackBar.open('Utente creato con successo', 'Chiudi', { duration: 3000 });
+            this.loadUsers();
+          });
+        }
+      }
+    });
+  }
+
   onDeleteUser(userId: string): void {
-    if (confirm('Sei sicuro di voler eliminare questo utente? L\'azione è irreversibile.')) {
+    if (confirm('Sei sicuro di voler eliminare questo utente?')) {
       this.userService.deleteUser(userId).subscribe(() => {
-        this.users = this.users.filter(user => user._id !== userId);
-        alert('Utente eliminato con successo.');
+        this.snackBar.open('Utente eliminato con successo', 'Chiudi', { duration: 3000 });
+        this.loadUsers();
       });
     }
-  }
-
-  openAddModal(): void {
-    this.selectedUser = null;
-    this.isModalOpen = true;
-  }
-
-  openEditModal(user: AppUser): void {
-    this.selectedUser = user;
-    this.isModalOpen = true;
-  }
-
-  handleFormClose(result: AppUser | null): void {
-    if (result) {
-      this.loadUsers();
-    }
-    this.isModalOpen = false;
   }
 }

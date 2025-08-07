@@ -4,129 +4,116 @@
 
   <form [formGroup]="reportForm" (ngSubmit)="onSubmit()">
 
-    <fieldset>
-      <legend>Tipo di Segnalazione</legend>
-      <div class.form-group>
-        <label>Tipo Segnalazione*</label>
-        <select formControlName="tipoSegnalazione">
-          <option value="Cittadino">Da Cittadino/Paziente</option>
-          <option value="Sanitario">Da Operatore Sanitario</option>
-        </select>
-      </div>
-    </fieldset>
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Tipo di Segnalazione</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-form-field appearance="outline">
+          <mat-label>Tipo Segnalazione*</mat-label>
+          <mat-select formControlName="tipoSegnalazione">
+            <mat-option value="Cittadino">Da Cittadino/Paziente</mat-option>
+            <mat-option value="Sanitario">Da Operatore Sanitario</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-card-content>
+    </mat-card>
 
-    <fieldset formGroupName="paziente">
-      <legend>1. Informazioni sul Paziente</legend>
-      <div class="form-grid">
-        <div class="form-group">
-          <label>Iniziali*</label>
-          <input type="text" formControlName="iniziali" maxlength="3">
-        </div>
-        <div class="form-group">
-          <label>Età*</label>
-          <input type="number" formControlName="eta">
-        </div>
-        <div class="form-group">
-          <label>Sesso*</label>
-          <select formControlName="sesso">
-            <option value="" disabled>Seleziona...</option>
-            <option value="M">Maschio</option>
-            <option value="F">Femmina</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Peso (kg)</label>
-          <input type="number" formControlName="peso">
-        </div>
-        <div class="form-group">
-          <label>Altezza (cm)</label>
-          <input type="number" formControlName="altezza">
-        </div>
-      </div>
-    </fieldset>
+    <mat-card appearance="outlined" formGroupName="paziente">
+      <mat-card-header>
+        <mat-card-title>1. Informazioni sul Paziente</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Iniziali*</mat-label>
+          <input matInput formControlName="iniziali" maxlength="3">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Età*</mat-label>
+          <input matInput type="number" formControlName="eta">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Sesso*</mat-label>
+          <mat-select formControlName="sesso">
+            <mat-option value="M">Maschio</mat-option>
+            <mat-option value="F">Femmina</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Peso (kg)</mat-label>
+          <input matInput type="number" formControlName="peso">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Altezza (cm)</mat-label>
+          <input matInput type="number" formControlName="altezza">
+        </mat-form-field>
+      </mat-card-content>
+    </mat-card>
 
-    <fieldset formGroupName="reazione">
-      <legend>2. Descrizione della Reazione Avversa (ADR)</legend>
-      <div class="form-group">
-        <label>Descrizione completa della reazione*</label>
-        <textarea rows="4" formControlName="descrizione"></textarea>
-      </div>
-      <div class="form-grid">
-        <div class="form-group">
-          <label>Data di Inizio*</label>
-          <input type="date" formControlName="dataInizio">
-        </div>
-        <div class="form-group">
-          <label>Esito della Reazione*</label>
-          <select formControlName="esito">
-            <option value="" disabled>Seleziona...</option>
-            <option>Guarigione completa</option>
-            <option>In via di guarigione</option>
-            <option>Guarigione con postumi</option>
-            <option>Persistenza della reazione</option>
-            <option>Decesso</option>
-            <option>Sconosciuto</option>
-          </select>
-        </div>
-        <div class="form-group checkbox-group" formGroupName="gravita">
-          <label>La reazione è grave?</label>
-          <input type="checkbox" formControlName="isGrave">
-        </div>
-      </div>
-    </fieldset>
-
-    <fieldset formArrayName="farmaciSospetti">
-      <legend>3. Farmaci Sospetti</legend>
-      <div *ngFor="let farmaco of farmaciSospetti.controls; let i = index" [formGroupName]="i" class="form-array-item">
-        <h4>Farmaco Sospetto #{{ i + 1 }}</h4>
+    <mat-card appearance="outlined" formGroupName="reazione">
+      <mat-card-header>
+        <mat-card-title>2. Descrizione della Reazione Avversa (ADR)</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-form-field appearance="outline">
+          <mat-label>Descrizione completa della reazione*</mat-label>
+          <textarea matInput rows="4" formControlName="descrizione"></textarea>
+        </mat-form-field>
         <div class="form-grid">
-          <div class="form-group"><label>Nome Commerciale*</label><input type="text" formControlName="nomeCommerciale"></div>
-          <div class="form-group"><label>Principio Attivo</label><input type="text" formControlName="principioAttivo"></div>
-          <div class="form-group"><label>N. Lotto</label><input type="text" formControlName="lotto"></div>
-          <div class="form-group"><label>Dosaggio</label><input type="text" formControlName="dosaggio"></div>
-          <div class="form-group"><label>Data Inizio Terapia</label><input type="date" formControlName="dataInizioTerapia"></div>
-          <div class="form-group"><label>Data Fine Terapia</label><input type="date" formControlName="dataFineTerapia"></div>
+          <mat-form-field appearance="outline">
+            <mat-label>Data di Inizio*</mat-label>
+            <input matInput type="date" formControlName="dataInizio">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Esito della Reazione*</mat-label>
+            <mat-select formControlName="esito">
+              <mat-option value="Guarigione completa">Guarigione completa</mat-option>
+              <mat-option value="In via di guarigione">In via di guarigione</mat-option>
+              <mat-option value="Guarigione con postumi">Guarigione con postumi</mat-option>
+              <mat-option value="Persistenza della reazione">Persistenza della reazione</mat-option>
+              <mat-option value="Decesso">Decesso</mat-option>
+              <mat-option value="Sconosciuto">Sconosciuto</mat-option>
+            </mat-select>
+          </mat-form-field>
         </div>
-        <div class="form-group">
-          <label>Indicazione d'Uso (perché è stato assunto?)</label>
-          <textarea rows="2" formControlName="indicazioneUso"></textarea>
+        <div formGroupName="gravita" class="checkbox-group">
+          <mat-checkbox formControlName="isGrave">La reazione è grave?</mat-checkbox>
         </div>
-        <button type="button" class="btn-danger" (click)="rimuoviFarmacoSospetto(i)" *ngIf="farmaciSospetti.controls.length > 1">Rimuovi Farmaco</button>
-      </div>
-      <button type="button" class="btn-secondary" (click)="aggiungiFarmacoSospetto()">+ Aggiungi Farmaco Sospetto</button>
-    </fieldset>
+      </mat-card-content>
+    </mat-card>
 
-    <fieldset formArrayName="farmaciConcomitanti">
-      <legend>4. Altri Farmaci Assunti (Concomitanti)</legend>
-      <div *ngFor="let farmaco of farmaciConcomitanti.controls; let i = index" [formGroupName]="i" class="form-array-item">
-        <h4>Farmaco Concomitante #{{ i + 1 }}</h4>
-        <div class="form-grid">
-          <div class="form-group"><label>Nome Commerciale*</label><input type="text" formControlName="nomeCommerciale"></div>
+    <mat-card appearance="outlined" formArrayName="farmaciSospetti">
+      <mat-card-header>
+        <mat-card-title>3. Farmaci Sospetti</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div *ngFor="let farmaco of farmaciSospetti.controls; let i = index" [formGroupName]="i" class="form-array-item">
+          <div class="form-array-header">
+            <h4>Farmaco Sospetto #{{ i + 1 }}</h4>
+            <button type="button" mat-icon-button color="warn" (click)="rimuoviFarmacoSospetto(i)" *ngIf="farmaciSospetti.controls.length > 1">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+          <div class="form-grid">
+            <mat-form-field appearance="outline"><mat-label>Nome Commerciale*</mat-label><input matInput formControlName="nomeCommerciale"></mat-form-field>
+            <mat-form-field appearance="outline"><mat-label>Principio Attivo</mat-label><input matInput formControlName="principioAttivo"></mat-form-field>
+            <mat-form-field appearance="outline"><mat-label>N. Lotto</mat-label><input matInput formControlName="lotto"></mat-form-field>
+            <mat-form-field appearance="outline"><mat-label>Dosaggio</mat-label><input matInput formControlName="dosaggio"></mat-form-field>
+            <mat-form-field appearance="outline"><mat-label>Data Inizio Terapia</mat-label><input matInput type="date" formControlName="dataInizioTerapia"></mat-form-field>
+            <mat-form-field appearance="outline"><mat-label>Data Fine Terapia</mat-label><input matInput type="date" formControlName="dataFineTerapia"></mat-form-field>
+          </div>
         </div>
-        <button type="button" class="btn-danger" (click)="rimuoviFarmacoConcomitante(i)">Rimuovi Farmaco</button>
-      </div>
-      <button type="button" class="btn-secondary" (click)="aggiungiFarmacoConcomitante()">+ Aggiungi Farmaco Concomitante</button>
-    </fieldset>
-
-    <fieldset formGroupName="localita">
-      <legend>Località (opzionale)</legend>
-      <div class="form-grid-inline">
-        <div class="form-group">
-          <label>Latitudine</label>
-          <input type="number" formControlName="lat">
-        </div>
-        <div class="form-group">
-          <label>Longitudine</label>
-          <input type="number" formControlName="lon">
-        </div>
-      </div>
-    </fieldset>
+        <button type="button" mat-stroked-button (click)="aggiungiFarmacoSospetto()">
+          <mat-icon>add</mat-icon> Aggiungi Farmaco Sospetto
+        </button>
+      </mat-card-content>
+    </mat-card>
 
     <div class="form-actions">
-      <button type="submit" class="btn-primary" [disabled]="reportForm.invalid || isLoading">
+      <button type="submit" mat-flat-button color="primary" [disabled]="reportForm.invalid || isLoading">
         {{ isLoading ? 'Salvataggio...' : (isEditMode ? 'Salva Modifiche' : 'Invia Segnalazione') }}
       </button>
-      <a routerLink="/reports" class="btn-secondary">Annulla</a>
+      <a mat-button routerLink="/reports">Annulla</a>
     </div>
     <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
   </form>

@@ -1,29 +1,36 @@
-<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
-  <h2>{{ isEditMode ? 'Modifica Utente' : 'Nuovo Utente' }}</h2>
-  <div class="form-group">
-    <label for="name">Nome</label>
-    <input type="text" id="name" formControlName="name">
-  </div>
-  <div class="form-group">
-    <label for="email">Email</label>
-    <input type="email" id="email" formControlName="email">
-  </div>
-  <div class="form-group" *ngIf="!isEditMode">
-    <label for="password">Password</label>
-    <input type="password" id="password" formControlName="password">
-  </div>
-  <div class="form-group">
-    <label for="role">Ruolo</label>
-    <select id="role" formControlName="role">
-      <option value="Operatore">Operatore</option>
-      <option value="Analista">Analista</option>
-      <option value="Admin">Admin</option>
-    </select>
-  </div>
-  <div class="form-actions">
-    <button type="submit" [disabled]="userForm.invalid || isLoading" class="btn-primary">
-      {{ isLoading ? 'Salvataggio...' : (isEditMode ? 'Salva Modifiche' : 'Crea Utente') }}
-    </button>
-    <button type="button" (click)="close()" class="btn-secondary">Annulla</button>
-  </div>
-</form>
+<h2 mat-dialog-title>{{ isEditMode ? 'Modifica Utente' : 'Nuovo Utente' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="userForm" class="user-form">
+    <mat-form-field appearance="outline">
+      <mat-label>Nome</mat-label>
+      <input matInput formControlName="name">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" formControlName="email">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" *ngIf="!isEditMode">
+      <mat-label>Password</mat-label>
+      <input matInput type="password" formControlName="password">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Ruolo</mat-label>
+      <mat-select formControlName="role">
+        <mat-option value="Operatore">Operatore</mat-option>
+        <mat-option value="Analista">Analista</mat-option>
+        <mat-option value="Admin">Admin</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Annulla</button>
+  <button mat-flat-button color="primary" (click)="onSave()" [disabled]="userForm.invalid">
+    {{ isEditMode ? 'Salva Modifiche' : 'Crea Utente' }}
+  </button>
+</mat-dialog-actions>

@@ -1,53 +1,61 @@
 <div class="login-page-wrapper">
   <div class="login-content">
 
-    <div class="form-panel">
-      <div class="form-header">
-        <img src="assets/images/logo.png" alt="Logo del Dipartimento o dell'Università" class="logo-placeholder">
-        <h2>Piattaforma di Farmacovigilanza</h2>
-        <p>Accedi per analizzare i dati</p>
-      </div>
+    <mat-card class="form-panel">
+      <mat-card-header>
+        <img mat-card-avatar src="assets/images/logo.png" alt="Logo Università" class="logo-placeholder">
+        <mat-card-title>Piattaforma di Farmacovigilanza</mat-card-title>
+        <mat-card-subtitle>Accedi per analizzare i dati</mat-card-subtitle>
+      </mat-card-header>
 
-      <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            [(ngModel)]="credentials.email"
-            placeholder="mario.rossi@example.com"
-            required
-            email
-            #email="ngModel">
-          <div *ngIf="email.invalid && (email.dirty || email.touched)" class="error">
-            Inserisci un'email valida.
+      <mat-card-content>
+        <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput
+                   type="email"
+                   name="email"
+                   [(ngModel)]="credentials.email"
+                   placeholder="mario.rossi@example.com"
+                   required
+                   email
+                   #email="ngModel">
+            <mat-error *ngIf="email.invalid">
+              Per favore, inserisci un'email valida.
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input matInput
+                   type="password"
+                   name="password"
+                   [(ngModel)]="credentials.password"
+                   required>
+            <mat-error *ngIf="loginForm.controls['password']?.invalid">
+              La password è obbligatoria.
+            </mat-error>
+          </mat-form-field>
+
+          <div *ngIf="errorMessage" class="error-message">
+            {{ errorMessage }}
           </div>
-        </div>
 
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            [(ngModel)]="credentials.password"
-            placeholder="••••••••"
-            required
-            #password="ngModel">
-        </div>
+          <button mat-flat-button color="primary" class="action-button" [disabled]="loginForm.invalid">
+            Accedi
+          </button>
+        </form>
 
-        <button type="submit" [disabled]="loginForm.invalid">Accedi</button>
+        <a mat-stroked-button color="accent" routerLink="/segnala" class="action-button">
+          Invia una Segnalazione
+        </a>
 
-        <div *ngIf="errorMessage" class="error-message">
-          {{ errorMessage }}
-        </div>
-      </form>
-    </div>
+      </mat-card-content>
+    </mat-card>
 
     <div class="info-panel">
       <h2>Dettagli Progetto di Tesi</h2>
-
       <div class="info-section">
         <h3>Studente</h3>
         <div class="info-item"><strong>Nome:</strong> <h3>ANTONIO BIONDILLO</h3></div>
@@ -55,7 +63,6 @@
         <div class="info-item"><strong>Corso di Studio:</strong> <h3>Ingegneria Informatica e dell'Automazione (D.M. 270/04)</h3></div>
         <div class="info-item"><strong>Percorso:</strong> <h3>Database</h3></div>
       </div>
-
       <div class="info-section">
         <h3>Tesi di Laurea</h3>
         <div class="info-item"><strong>Titolo:</strong> <h3>Sviluppo di una Piattaforma per l'Analisi di Big Data in Ambito Farmaceutico: un'Applicazione per la Farmacovigilanza</h3></div>
@@ -63,7 +70,6 @@
         <div class="info-item"><strong>Relatore:</strong> <h3>Prof. Antonino Longo Minnolo</h3></div>
         <div class="info-item"><strong>Sessione Prevista:</strong> <h3>08 Ottobre 2025</h3></div>
       </div>
-
       <img src="assets/images/dna.png" alt="Icona astratta di dati o DNA" class="icon-placeholder">
     </div>
 

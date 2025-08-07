@@ -1,147 +1,220 @@
-.dashboard-container {
-  animation: fadeIn 0.5s ease-in-out;
-}
+@import '@angular/material/theming';
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+.dashboard-container {
+  padding: 24px;
 }
 
 .header {
   margin-bottom: 2rem;
   h1 { margin: 0; }
-  p { color: #666; font-size: 1.1rem; }
+  p { color: rgba(0,0,0,0.54); }
 }
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 1.5rem;
-}
-
-.card {
-  background-color: #fff;
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-  border: 1px solid #eef2f7;
-  display: flex;
-  flex-direction: column;
-  h3 {
-    margin-top: 0;
-    font-size: 1.1rem;
-    color: #333;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 24px;
 }
 
 .kpi-card {
-  flex-direction: row;
+  display: flex;
   align-items: center;
-  gap: 1.5rem;
-  fa-icon { color: #007bff; }
-  .kpi-content {
-    .kpi-value { font-size: 2rem; font-weight: 600; color: #333; }
-    .kpi-label { font-size: 0.9rem; color: #666; }
+  padding: 16px;
+
+  mat-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 36px;
+    margin-right: 12px;
+    color: rgba(0,0,0,0.54);
   }
-  &--danger {
-    fa-icon { color: #dc3545; }
-    .kpi-content .kpi-value { color: #dc3545; }
+
+  .kpi-content {
+    flex-grow: 1;
+    min-width: 0;
+
+    .kpi-value {
+      font-size: 1.5rem;
+      font-weight: 500;
+      line-height: 1.2;
+      word-break: break-word;
+    }
+    .kpi-label {
+      font-size: 0.8rem;
+      color: rgba(0,0,0,0.54);
+      margin-top: 4px;
+    }
+  }
+  mat-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 40px;
+    margin-right: 16px;
+    color: rgba(0,0,0,0.54);
+  }
+  .kpi-content {
+    .kpi-value { font-size: 2rem; font-weight: 500; }
+    .kpi-label { font-size: 0.9rem; color: rgba(0,0,0,0.54); }
+  }
+}
+
+.recent-reports-card {
+  grid-column: 1 / -1;
+
+  @media (min-width: 1280px) {
+    grid-column: span 1;
+  }
+
+  mat-card-content {
+    padding: 0 !important;
+    margin-top: 16px;
+  }
+
+  .list-subtitle {
+    font-size: 0.8rem;
+    color: rgba(0,0,0,0.54);
+  }
+
+  mat-icon {
+    &.esito-guarigione { color: #28a745; }
+
+    &.esito-decesso { color: #343a40; }
+
+    &.esito-persistenza { color: #ffc107; }
+  }
+}
+
+.chart-card {
+  mat-card-content {
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 
 .map-card {
   grid-column: 1 / -1;
   display: flex;
-  gap: 1.5rem;
+  gap: 24px;
   flex-wrap: wrap;
-
   .map-wrapper {
     flex: 1;
     min-width: 320px;
     display: flex;
     flex-direction: column;
     min-height: 400px;
-
+    mat-card-title { display: flex; align-items: center; gap: 8px; }
     #map, #heatmap {
       flex-grow: 1;
       width: 100%;
       height: 600px;
-      border-radius: 8px;
+      border-radius: 4px;
       margin-top: 1rem;
     }
   }
 }
 
-.recent-reports-card {
-  ul {
-    list-style: none; padding: 0; margin: 0;
-    li {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 0.75rem 0; border-bottom: 1px solid #f0f0f0;
-      &:last-child { border-bottom: none; }
-      .farmaco { font-weight: 600; }
-      .data { color: #888; font-size: 0.85rem; }
+.operator-view {
+  .quick-actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 16px;
+    a {
+      flex: 1;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
   }
 }
 
-.gravita-badge {
-  padding: 0.2rem 0.5rem; border-radius: 12px; font-size: 0.75rem;
-  background-color: #6c757d; color: white;
-}
-
-.chart-card {
+.loading-spinner {
   display: flex;
-  flex-direction: column;
   justify-content: center;
+  align-items: center;
+  padding: 3rem;
 }
 
-:host ::ng-deep .info.legend {
-  background-color: rgba(255, 255, 255, 0.9);
-  padding: 10px 15px;
-  border-radius: 8px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.2);
-  line-height: 1.5;
+:host ::ng-deep {
+  .info.legend {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 10px 15px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    h4 { margin: 0 0 8px 0; }
+    div { display: flex; align-items: center; }
+    i { width: 18px; height: 18px; float: left; margin-right: 8px; border-radius: 50%; border: 1px solid #555; }
+  }
+  .heatmap-legend {
+    width: 150px;
+    .gradient-bar {
+      width: 100%; height: 20px; border-radius: 10px; border: 1px solid #555;
+      background: linear-gradient(to right, #0000ff, #00ffff, #00ff00, #ffff00, #ff0000);
+    }
+    .labels { display: flex; justify-content: space-between; font-size: 0.8rem; margin-top: 5px; }
+  }
+}
 
-  h4 {
-    margin: 0 0 8px 0;
-    text-align: center;
+.kpi-card {
+  &--blue {
+    mat-icon, .kpi-value {
+      color: #007bff;
+    }
   }
 
-  div {
+  &--orange {
+    mat-icon, .kpi-value {
+      color: #fd7e14;
+    }
+  }
+
+  &--red {
+    mat-icon, .kpi-value {
+      color: #dc3545;
+    }
+  }
+
+  &.esito-guarigione {
+    mat-icon, .kpi-value {
+      color: #28a745;
+    }
+  }
+
+  &.esito-decesso {
+    mat-icon, .kpi-value {
+      color: #343a40;
+    }
+  }
+
+  &.esito-persistenza {
+    mat-icon, .kpi-value {
+      color: #ffc107;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-grid {
     display: flex;
+    flex-direction: column;
     align-items: center;
   }
 
-  i {
-    width: 18px;
-    height: 18px;
-    float: left;
-    margin-right: 8px;
-    opacity: 0.9;
-    border-radius: 50%;
-    border: 1px solid #555;
-  }
-}
-
-:host ::ng-deep .info.legend.heatmap-legend {
-  width: 150px;
-
-  .gradient-bar {
+  .card {
     width: 100%;
-    height: 20px;
-    border-radius: 10px;
-    border: 1px solid #555;
-    background: linear-gradient(to right, #0000ff, #00ffff, #00ff00, #ffff00, #ff0000);
+    max-width: 450px;
   }
 
-  .labels {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.8rem;
-    margin-top: 5px;
+  .kpi-card{
+    width: 100%;
+    max-width: 450px;
+  }
+
+  .chart-card{
+    width: 100%;
   }
 }

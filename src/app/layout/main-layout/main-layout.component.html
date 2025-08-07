@@ -1,23 +1,71 @@
-<header class="main-header">
-  <h1>Piattaforma di Farmacovigilanza</h1>
-  <div class="user-info" *ngIf="user">
-    <span>Benvenuto, {{ user.name }} ({{ user.role }})</span>
-    <button (click)="logout()">Logout</button>
-  </div>
-</header>
+<mat-sidenav-container class="sidenav-container">
 
-<div class="main-container">
-  <nav class="sidebar">
-    <ul>
-      <li><a routerLink="/dashboard" routerLinkActive="active">Dashboard</a></li>
-      <li><a routerLink="/reports" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Lista Segnalazioni</a></li>
-      <li><a routerLink="/reports/new" routerLinkActive="active">Nuova Segnalazione</a></li>
-      <li *ngIf="isAdmin"><a routerLink="/admin/users" routerLinkActive="active">Gestione Utenti</a></li>
-      <li *ngIf="canViewAnalytics"><a routerLink="/analytics" routerLinkActive="active">Analytics Avanzate</a></li>
-    </ul>
-  </nav>
+  <mat-sidenav #drawer class="sidenav" fixedInViewport
+               [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+               [mode]="(isHandset$ | async) ? 'over' : 'side'"
+               [opened]="(isHandset$ | async) === false">
 
-  <main class="content">
-    <router-outlet></router-outlet>
-  </main>
-</div>
+    <div class="sidenav-content-wrapper">
+      <mat-toolbar>Menu</mat-toolbar>
+      <mat-nav-list>
+        <a mat-list-item routerLink="/dashboard" routerLinkActive="active">
+          <mat-icon mat-list-icon>dashboard</mat-icon>
+          Dashboard
+        </a>
+        <a mat-list-item routerLink="/reports" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <mat-icon mat-list-icon>list_alt</mat-icon>
+          Lista Segnalazioni
+        </a>
+        <a mat-list-item routerLink="/reports/new" routerLinkActive="active">
+          <mat-icon mat-list-icon>add_circle_outline</mat-icon>
+          Nuova Segnalazione
+        </a>
+        <a mat-list-item *ngIf="canViewAnalytics" routerLink="/analytics" routerLinkActive="active">
+          <mat-icon mat-list-icon>analytics</mat-icon>
+          Analytics Avanzate
+        </a>
+        <a mat-list-item *ngIf="isAdmin" routerLink="/admin/users" routerLinkActive="active">
+          <mat-icon mat-list-icon>people</mat-icon>
+          Gestione Utenti
+        </a>
+      </mat-nav-list>
+    </div>
+
+    <div class="sidenav-footer" *ngIf="user">
+      <mat-nav-list>
+        <a mat-list-item (click)="logout()">
+          <mat-icon mat-list-icon>logout</mat-icon>
+          Logout
+        </a>
+      </mat-nav-list>
+    </div>
+
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar color="primary" class="main-toolbar">
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()"
+        *ngIf="isHandset$ | async">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span>Piattaforma di Farmacovigilanza</span>
+      <span class="toolbar-spacer"></span>
+
+      <div *ngIf="user && !(isHandset$ | async)" class="user-info">
+        <span>{{ user.name }} ({{ user.role }})</span>
+        <button mat-icon-button (click)="logout()" aria-label="Logout">
+          <mat-icon>logout</mat-icon>
+        </button>
+      </div>
+    </mat-toolbar>
+
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+
+  </mat-sidenav-content>
+</mat-sidenav-container>

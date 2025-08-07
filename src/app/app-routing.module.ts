@@ -11,6 +11,7 @@ import { UserManagementComponent } from './pages/admin/user-management/user-mana
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
+  { path: 'segnala', component: ReportFormComponent },
 
   {
     path: '',

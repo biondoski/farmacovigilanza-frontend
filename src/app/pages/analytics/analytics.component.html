@@ -1,24 +1,39 @@
 <div class="analytics-container">
   <h1>Analytics Avanzate</h1>
 
-  <div class="card filter-card">
-    <form [formGroup]="filterForm" (ngSubmit)="applyFilters()">
-      <input type="text" placeholder="Nome Farmaco (opzionale)" formControlName="farmaco">
-      <input type="date" formControlName="dataDa" title="Data Da">
-      <input type="date" formControlName="dataA" title="Data A">
-      <button type="submit" [disabled]="isLoading">
-        {{ isLoading ? 'Caricamento...' : 'Applica Filtri' }}
-      </button>
-    </form>
+  <mat-card appearance="outlined" class="filter-card">
+    <mat-card-content>
+      <form [formGroup]="filterForm" (ngSubmit)="applyFilters()">
+        <mat-form-field appearance="outline">
+          <mat-label>Nome Farmaco (opzionale)</mat-label>
+          <input matInput formControlName="farmaco">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Data Da</mat-label>
+          <input matInput type="date" formControlName="dataDa">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Data A</mat-label>
+          <input matInput type="date" formControlName="dataA">
+        </mat-form-field>
+        <button mat-flat-button color="primary" type="submit" [disabled]="isLoading">
+          <mat-icon>filter_list</mat-icon>
+          {{ isLoading ? 'Analisi...' : 'Applica Filtri' }}
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <div *ngIf="isLoading" class="loading-spinner">
+    <mat-spinner></mat-spinner>
+    <p>Analisi dei dati in corso...</p>
   </div>
 
-  <div *ngIf="isLoading" class="loading">Analisi dei dati in corso...</div>
-
   <div *ngIf="!isLoading" class="analytics-grid">
-    <div class="card">
-      <h2>Segnalazioni per Farmaco</h2>
-      <p class="subtitle">Clicca su una barra per vedere i dettagli</p>
-      <div class="chart-container">
+    <mat-card>
+      <mat-card-title>Segnalazioni per Farmaco</mat-card-title>
+      <mat-card-subtitle>Clicca su una barra per vedere i dettagli</mat-card-subtitle>
+      <mat-card-content class="chart-container">
         <ngx-charts-bar-vertical
           (select)="onChartClick($event)"
           [results]="reportsByDrugData"
@@ -27,50 +42,69 @@
           xAxisLabel="Farmaco"
           yAxisLabel="Numero di Segnalazioni">
         </ngx-charts-bar-vertical>
-      </div>
-    </div>
+      </mat-card-content>
+    </mat-card>
 
-    <div class="card">
-      <h2>Segnalazioni per Gravità</h2>
-      <div class="chart-container">
+    <mat-card>
+      <mat-card-title>Segnalazioni per Esito</mat-card-title>
+      <mat-card-content class="chart-container">
         <ngx-charts-pie-chart
           [results]="reportsBySeverityData"
           [labels]="true"
           [doughnut]="true">
         </ngx-charts-pie-chart>
-      </div>
-    </div>
-  </div>
+      </mat-card-content>
+    </mat-card>
 
-  <div *ngIf="!isLoading" class="analytics-grid">
-    <div class="card" *ngIf="filterForm.value.farmaco && hotLotsData.length > 0">
-      <h2>Lotti più Segnalati per: <strong>{{ filterForm.value.farmaco }}</strong></h2>
-      <div class="table-container">
-        <table>
-          <thead>
-          <tr>
-            <th>N° Lotto</th>
-            <th>Segnalazioni Totali</th>
-            <th>Segnalazioni Gravi</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr *ngFor="let lot of hotLotsData">
-            <td>{{ lot._id }}</td>
-            <td class="text-center">{{ lot.segnalazioniTotali }}</td>
-            <td class="text-center danger-text">{{ lot.segnalazioniGravi }}</td>
-          </tr>
-          </tbody>
+    <mat-card *ngIf="filterForm.value.farmaco && hotLotsData.length > 0" class="lot-card">
+      <mat-card-title>Lotti più Segnalati per: <strong>{{ filterForm.value.farmaco }}</strong></mat-card-title>
+      <mat-card-content class="table-container">
+        <table mat-table [dataSource]="hotLotsData">
+          <ng-container matColumnDef="lotto">
+            <th mat-header-cell *matHeaderCellDef> N° Lotto </th>
+            <td mat-cell *matCellDef="let lot"> {{lot._id}} </td>
+          </ng-container>
+          <ng-container matColumnDef="totali">
+            <th mat-header-cell *matHeaderCellDef> Totali </th>
+            <td mat-cell *matCellDef="let lot"> {{lot.segnalazioniTotali}} </td>
+          </ng-container>
+          <ng-container matColumnDef="gravi">
+            <th mat-header-cell *matHeaderCellDef> Gravi </th>
+            <td mat-cell *matCellDef="let lot" class="danger-text"> {{lot.segnalazioniGravi}} </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="['lotto', 'totali', 'gravi']"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['lotto', 'totali', 'gravi'];"></tr>
         </table>
-      </div>
-    </div>
-  </div>
+      </mat-card-content>
+    </mat-card>
 
-  <div *ngIf="!isLoading" class="analytics-grid">
-    <div class="card heatmap-card" *ngIf="symptomCorrelationData.length > 0">
-      <h2>Correlazione tra Sintomi</h2>
-      <p class="subtitle">Quali sintomi appaiono più spesso insieme</p>
-      <div class="chart-container">
+    <mat-card>
+      <mat-card-title>Segnalazioni per Fascia d'Età</mat-card-title>
+      <mat-card-content class="chart-container">
+        <ngx-charts-bar-vertical
+          [results]="ageAnalysisData"
+          [xAxis]="true"
+          [yAxis]="true"
+          xAxisLabel="Fascia d'Età"
+          yAxisLabel="Numero di Segnalazioni">
+        </ngx-charts-bar-vertical>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-title>Distribuzione per Sesso</mat-card-title>
+      <mat-card-content class="chart-container">
+        <ngx-charts-pie-chart
+          [results]="genderAnalysisData"
+          [labels]="true">
+        </ngx-charts-pie-chart>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="heatmap-card" *ngIf="symptomCorrelationData.length > 0">
+      <mat-card-title>Correlazione tra Sintomi</mat-card-title>
+      <mat-card-subtitle>Quali sintomi appaiono più spesso insieme</mat-card-subtitle>
+      <mat-card-content class="chart-container">
         <ngx-charts-heat-map
           [results]="symptomCorrelationData"
           [xAxis]="true"
@@ -81,33 +115,8 @@
           xAxisLabel="Sintomi"
           yAxisLabel="Sintomi">
         </ngx-charts-heat-map>
-      </div>
-    </div>
+      </mat-card-content>
+    </mat-card>
+
   </div>
-
-  <div *ngIf="!isLoading" class="analytics-grid">
-    <div class="card">
-      <h2>Segnalazioni per Fascia d'Età</h2>
-      <div class="chart-container">
-        <ngx-charts-bar-vertical
-          [results]="ageAnalysisData"
-          [xAxis]="true"
-          [yAxis]="true"
-          xAxisLabel="Fascia d'Età"
-          yAxisLabel="Numero di Segnalazioni">
-        </ngx-charts-bar-vertical>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Distribuzione per Sesso</h2>
-      <div class="chart-container">
-        <ngx-charts-pie-chart
-          [results]="genderAnalysisData"
-          [labels]="true">
-        </ngx-charts-pie-chart>
-      </div>
-    </div>
-  </div>
-
 </div>
